@@ -27,6 +27,29 @@ function getDayWithLowestSpread() {
     .value();
 }
 
+function getTeamWithLowestSpread() {
+  var data = fs.readFileSync('football.dat', {encoding: 'utf-8'} )
+    , tableData = data.split('\n').slice(5, 26)
+    , numbers = /\d+/g 
+    , names = /[A-z]+/
+    ;
+
+  return _.chain(tableData)
+    .reduce(function(memo, line){
+        team = line.match(names);
+        infos = line.match(numbers);
+        if (team && infos){
+          memo.push({team: team[0], spread: Math.abs(infos[5] - infos[6])});
+        }
+        return memo;
+      }, [])
+    .sortBy(function(obj){ return obj.spread; })
+    .map(function(obj){ return obj.team; })
+    .first()
+    .value();
+}
+
 // test
 assert.equal(14, getDayWithLowestSpread());
+assert.equal('Aston_Villa', getTeamWithLowestSpread());
 
