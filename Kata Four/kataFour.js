@@ -9,44 +9,46 @@ var fs = require('fs')
   , assert = require('chai').assert
   ;
 
-function getDayWithLowestSpread() {
-  var data = fs.readFileSync('weather.dat', {encoding: 'utf-8'} )
-    , tableData = data.split('\n').slice(8,38)
-    , pattern = /\d+/g // search for numbers
+// Returns a table with all the line from 'filename' matching 'pattern'
+function parseDataFile(filename, pattern){
+  var data = fs.readFileSync(filename, {encoding: 'utf-8'} )
     ;
 
-  return _.chain(tableData)
-    .reduce(function(memo, line){
-        var infos = line.match(pattern);
-        memo.push({number: infos[0], spread: infos[1] - infos[2]});
-        return memo;
-      }, [])
-    .sortBy(function(day){ return day.spread; })
-    .map(function(day){ return day.number; })
+  return _.filter(data.split('\n'), function(line){
+    return pattern.test(line);
+  });
+}
+
+// Returns the property 'returnProp' of the object with the lowest property 'rankProp'
+function getMinFromObjects(array, returnProp, rankProp){
+  return _.chain(array)
+    .sortBy(function(obj){ return obj[rankProp]; })
+    .map(function(obj){ return obj[returnProp]; })
     .first()
     .value();
 }
 
-function getTeamWithLowestSpread() {
-  var data = fs.readFileSync('football.dat', {encoding: 'utf-8'} )
-    , tableData = data.split('\n').slice(5, 26)
-    , numbers = /\d+/g 
-    , names = /[A-z]+/
-    ;
+function getDayWithLowestSpread() {
 
-  return _.chain(tableData)
-    .reduce(function(memo, line){
-        team = line.match(names);
-        infos = line.match(numbers);
-        if (team && infos){
-          memo.push({team: team[0], spread: Math.abs(infos[5] - infos[6])});
-        }
-        return memo;
-      }, [])
-    .sortBy(function(obj){ return obj.spread; })
-    .map(function(obj){ return obj.team; })
-    .first()
-    .value();
+  var daysStat = _.reduce(parseDataFile('weather.dat', /^\s*\d+\.?\s+/), function(memo, line){
+                        var numbers = line.match(/\d+/g);
+                        memo.push({ day: numbers[0], spread: numbers[1] - numbers[2] });
+                        return memo;
+                      }, []);
+
+  return getMinFromObjects(daysStat, 'day', 'spread');
+}
+
+function getTeamWithLowestSpread() {
+
+  var teamsStat = _.reduce(parseDataFile('football.dat', /^\s*\d+\.?\s+/), function(memo, line){
+                         var teamName = line.match(/[A-z]+/);
+                         var numbers = line.match(/\d+/g);
+                         memo.push({team: teamName[0], spread: Math.abs(numbers[5] - numbers[6])});
+                         return memo;
+                       }, []);
+
+  return getMinFromObjects(teamsStat, 'team', 'spread');
 }
 
 // test
