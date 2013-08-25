@@ -33,6 +33,8 @@ BloomFilter.prototype.addWord = function(word){
 }
 
 BloomFilter.prototype.lookUpWord = function(word){  
+  var position;
+  
   for (var i = 0; i < this.k; i +=1){
     position = this.getHashFunction(i).processWord(word);
     if(this.bitMap[position] == 0){
