@@ -4,7 +4,6 @@
 */
 
 var fs = require('fs')
-  , util = require('util')
   , _ = require('underscore')
   , assert = require('chai').assert
   ;
@@ -29,7 +28,6 @@ function getMinFromObjects(array, returnProp, rankProp){
 }
 
 function getDayWithLowestSpread() {
-
   var daysStat = _.reduce(parseDataFile('weather.dat', /^\s*\d+\.?\s+/), function(memo, line){
                         var numbers = line.match(/\d+/g);
                         memo.push({ day: numbers[0], spread: numbers[1] - numbers[2] });
@@ -40,7 +38,6 @@ function getDayWithLowestSpread() {
 }
 
 function getTeamWithLowestSpread() {
-
   var teamsStat = _.reduce(parseDataFile('football.dat', /^\s*\d+\.?\s+/), function(memo, line){
                          var teamName = line.match(/[A-z]+/);
                          var numbers = line.match(/\d+/g);
