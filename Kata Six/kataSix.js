@@ -38,17 +38,6 @@ function getAnagrams(filename){
   });
 
   return anagrams;
-  /*
-  return _.chain(words)
-          .reduce(function(memo, word){
-                       if(existy(memo[word.sortAlphabetically()]))
-                         memo[word.sortAlphabetically()].push(word);
-                       else
-                         memo[word.sortAlphabetically()] = [word];
-                       return memo;
-                      }, {})
-          .filter(function(row){ return row.length > 1; })
-          .value(); */
 }
 
 // Returns an array with the longest values in a collection of array
