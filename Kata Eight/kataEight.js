@@ -6,7 +6,6 @@
 
 var fs = require('fs')
   , _ = require('underscore')
-  , util = require('util')
   , startTime = new Date().getTime()
   , endTime
   , executionTime
