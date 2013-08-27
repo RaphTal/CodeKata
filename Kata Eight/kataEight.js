@@ -15,6 +15,7 @@ var fs = require('fs')
   , threeLetterWords = {}
   , fourLetterWords = {}
   , sixLetterWords = []
+  , matches = 0
   ;
 
 _.each(words, function(word){
@@ -28,19 +29,25 @@ _.each(words, function(word){
 // No function declared to save time 
 
 _.each(sixLetterWords, function(word){
-  if (twoLetterWords[word.slice(0,2)] && fourLetterWords[word.slice(2, 6)])
+  if (twoLetterWords[word.slice(0,2)] && fourLetterWords[word.slice(2, 6)]) {
     console.log(word.slice(0,2) + ' + ' + word.slice(2, 6) + ' => ' + word);
+    matches += 1;
+  }
 
-  else if (threeLetterWords[word.slice(0,3)] && threeLetterWords[word.slice(3, 6)])
+  else if (threeLetterWords[word.slice(0,3)] && threeLetterWords[word.slice(3, 6)]) {
     console.log(word.slice(0,3) + ' + ' + word.slice(3, 6) + ' => ' + word);
+    matches += 1;
+  }
 
-  else if (fourLetterWords[word.slice(0,4)] && twoLetterWords[word.slice(4, 6)])
+  else if (fourLetterWords[word.slice(0,4)] && twoLetterWords[word.slice(4, 6)]) {
     console.log(word.slice(0,3) + ' + ' + word.slice(3, 6) + ' => ' + word);
+    matches += 1;
+  }
 });
 
 // Execution time
 endTime = new Date().getTime()
 executionTime = (endTime - startTime) / 1000;
 
-console.log('Program executed in ' + executionTime +' seconds!');
+console.log(matches + ' matches found in ' + executionTime +' seconds!');
 
